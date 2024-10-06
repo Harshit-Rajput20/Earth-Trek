@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Articles {{ year }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a2a;
+            color: #e0e0ff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+                radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+            background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+            background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+            animation: backgroundScroll 60s linear infinite;
+        }
+
+        @keyframes backgroundScroll {
+            0% { background-position: 0 0, 40px 60px, 130px 270px, 70px 100px; }
+            100% { background-position: 550px 550px, 590px 610px, 680px 820px, 620px 650px; }
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 280px;
+            margin-right: 20px;
+            
+            flex-shrink: 0;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #7fdbff;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #b8d8ff;
+            margin-bottom: 8px;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 12px;
+            color: #7fdbff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .card a:hover {
+            color: #ffffff;
+        }
+
+        .button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(127, 219, 255, 0.3);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: rgba(127, 219, 255, 0.5);
+        }
+
+        .button.left {
+            left: 10px;
+        }
+
+        .button.right {
+            right
+            
+            : 10px;
+        }
+
+        .pubdate{
+            display:none
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <button class="button left" onclick="prevSlide()">&#10094;</button>
+        <div class="carousel">
+            {% for article in articles %}
+            <div class="card">
+                <img src="/static/{{ article['Image Filename'] }}" alt="{{ article['Title'] }}">
+                <h3>{{ article['Title'] }}</h3>
+                <p><strong>Authors:</strong> {{ article['Authors'] }}</p>
+                <p class="pubdate"><strong>Publication Date:</strong> {{ article['Publication Date'] }}</p>
+                <p>{{ article['Description'].split(' ')[:20] | join(' ') }}...</p>
+
+                <a href="{{ article['URL'] }}" target="_blank">Explore More</a>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="button right" onclick="nextSlide()">&#10095;</button>
+    </div>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        let offset = 0;
+        const cardWidth = 300;  // card width + margin
+
+        function nextSlide() {
+            const maxOffset = -(carousel.children.length * cardWidth - carousel.offsetWidth);
+            offset -= cardWidth;
+            if (offset < maxOffset) {
+                offset = maxOffset;
+            }
+            carousel.style.transform = `translateX(${offset}px)`;
+        }
+
+        function prevSlide() {
+            offset += cardWidth;
+            if (offset > 0) {
+                offset = 0;
+            }
+            carousel.style.transform = `translateX(${offset}px)`;
+        }
+    </script>
+</body>
+</html>
